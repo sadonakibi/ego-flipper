@@ -180,7 +180,7 @@ bool ego_daughter_day(const EgoState* s, uint32_t day) {
            (day - s->daughter_anchor) % EGO_DAUGHTER_CYCLE == 0;
 }
 
-/* Колода дня: 14 ежедневных + 3 бонуса из ротации; в дни с дочерью первый бонус - «время с дочерью». */
+/* Колода дня: 14 ежедневных + 3 бонуса из ротации; в особые дни первый бонус - «время с близкими». */
 static void deck_build(EgoState* s, uint32_t day) {
     for(int i = 0; i < EGO_CORE_QUESTS; i++) s->deck[i] = (uint8_t)i;
     for(int k = 0; k < EGO_BONUS_SLOTS; k++) s->deck[EGO_CORE_QUESTS + k] = bonus_pick(day, k);

@@ -21,14 +21,14 @@
 #define CONTROL_ROWS 4 // заметил, удержался, срыв, выход из EGO
 #define CONTROL_ROW_SLIP 2
 #define CONTROL_ROW_EXIT 3
-#define MONEY_ROWS 4 // пополнил, снял, шаг, день с дочерью
+#define MONEY_ROWS 4 // пополнил, снял, шаг, особый день
 #define MONEY_ROW_ADD 0
 #define MONEY_ROW_TAKE 1
 #define MONEY_ROW_STEP 2
 #define MONEY_ROW_DAUGHTER 3
 
 /* Главный экран: Око, число EGO, ранг, шкала круга.
- *   ОК - задания, влево - ДЕНЬГИ (копилка, день с дочерью), вниз - КОНТРОЛЬ (привычки),
+ *   ОК - задания, влево - ДЕНЬГИ (копилка, особый день), вниз - КОНТРОЛЬ (привычки),
  *   вверх из КОНТРОЛЯ - строка «ВЫХОД ИЗ EGO», удержание ОК вне EGO - возврат,
  *   вправо - сон, вверх - профиль. */
 typedef enum {
@@ -37,7 +37,7 @@ typedef enum {
     ScreenTasks, // ежедневный список и бонусы
     ScreenCauses, // причины после возврата
     ScreenControl, // контроль: привычки и выход из EGO (таймер) в одном модуле
-    ScreenMoney, // деньги: копилка и день с дочерью
+    ScreenMoney, // деньги: копилка и особый день
     ScreenSleep, // фиксация сна
     ScreenProfile, // профиль: логотип, герой и копилка, данные, динамика
     ScreenCard, // карточка дежурного режима
@@ -365,7 +365,7 @@ static void do_sleep_adjust(EgoApp* app, int delta_min) {
     save_and_track(app);
 }
 
-/* ---------- копилка и день с дочерью ---------- */
+/* ---------- копилка и особый день ---------- */
 
 static void do_savings(EgoApp* app, int sign) {
     sync_clock(app);
@@ -405,7 +405,7 @@ static void do_money(EgoApp* app) {
 static void do_daughter(EgoApp* app) {
     sync_clock(app);
     bool on = ego_daughter_toggle(&app->state, app->day);
-    set_msg(app, on ? "ДЕНЬ С ДОЧЕРЬЮ" : "ДОЧЬ: ВЫКЛ");
+    set_msg(app, on ? "ОСОБЫЙ ДЕНЬ" : "ОСОБЫЙ ДЕНЬ: НЕТ");
     ego_log(now_ts(), "daughter", on ? 1 : 0, 0, app->state.ego);
     ego_storage_save(&app->state);
 }
@@ -951,7 +951,7 @@ static void draw_money(Canvas* c, EgoApp* app) {
     ego_text_right(c, 127, 0, buf);
     draw_progress(c, 0, 9, 128, 6, s->savings_k, EGO_SAVINGS_GOAL);
 
-    const char* labels[MONEY_ROWS] = {"ПОПОЛНИЛ", "СНЯЛ", "ШАГ", "ДОЧЬ СЕГОДНЯ"};
+    const char* labels[MONEY_ROWS] = {"ПОПОЛНИЛ", "СНЯЛ", "ШАГ", "ОСОБЫЙ ДЕНЬ"};
     char rights[MONEY_ROWS][16];
     snprintf(rights[MONEY_ROW_ADD], sizeof(rights[0]), "+%uК", app->savings_step);
     snprintf(rights[MONEY_ROW_TAKE], sizeof(rights[0]), "-%uК", app->savings_step);
@@ -1128,7 +1128,7 @@ static void draw_profile_data(Canvas* c, EgoApp* app) {
     ego_text_right(c, 126, 37, "ОК");
     ego_text(c, 2, 46, ego_is_paused(s, app->day) ? "ПАУЗА: СЕГОДНЯ" : "ПАУЗА: НЕТ");
     ego_text_right(c, 126, 46, "ДЕРЖИ ОК");
-    ego_text(c, 2, 55, ego_daughter_day(s, app->day) ? "ДОЧЬ СЕГОДНЯ: ДА" : "ДОЧЬ СЕГОДНЯ: НЕТ");
+    ego_text(c, 2, 55, ego_daughter_day(s, app->day) ? "ОСОБЫЙ ДЕНЬ: ДА" : "ОСОБЫЙ ДЕНЬ: НЕТ");
     ego_text_right(c, 126, 55, "ВЛЕВО");
 }
 

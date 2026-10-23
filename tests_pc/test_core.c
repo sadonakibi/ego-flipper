@@ -26,7 +26,7 @@ static uint8_t upd(EgoState* s, uint32_t day) {
 int main(void) {
     EgoState s;
     ego_state_init(&s);
-    assert(s.ego == 300 && s.floor == 150 && s.peak == 300 && s.savings_k == 70);
+    assert(s.ego == 300 && s.floor == 150 && s.peak == 300 && s.savings_k == 0);
     assert(s.load[4] == 30 && s.load[5] == 25); /* отжимания 30, приседания 25 */
 
     /* --- ранги, круги, границы --- */
@@ -186,13 +186,13 @@ int main(void) {
     /* --- копилка: шаг 1..5К, первое пополнение дня даёт очки --- */
     fresh(&s);
     upd(&s, d);
-    assert(ego_savings_add(&s, 3, d) == 5 && s.savings_k == 73 && s.ego == 605);
-    assert(ego_savings_add(&s, 5, d) == 0 && s.savings_k == 78 && s.ego == 605);
-    assert(ego_savings_add(&s, -5, d) == 0 && s.savings_k == 73);
+    assert(ego_savings_add(&s, 3, d) == 5 && s.savings_k == 3 && s.ego == 605);
+    assert(ego_savings_add(&s, 5, d) == 0 && s.savings_k == 8 && s.ego == 605);
+    assert(ego_savings_add(&s, -5, d) == 0 && s.savings_k == 3);
     assert(ego_savings_add(&s, -999, d) == 0 && s.savings_k == 0);
     assert(ego_savings_add(&s, 5, d + 1) == 5);
 
-    /* --- дни с дочерью: раз в 3 дня --- */
+    /* --- особые дни: раз в 3 дня --- */
     fresh(&s);
     upd(&s, d);
     assert(!ego_daughter_day(&s, d));
