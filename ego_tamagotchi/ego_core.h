@@ -13,7 +13,7 @@
  *   Причины  - после возврата: «анализ» и «выход из EGO», каждая -1 (налог).
  *   Привычки - тот же модуль «Контроль»: заметил +1, удержался +3, срыв небольшой штраф.
  *   Сон      - лёг / встал, часы за 24 часа складываются из кусков (ночи с ребёнком рваные).
- *   Копилка  - цель 200к, шаг 1..5к, первое пополнение дня даёт очки.
+ *   Копилка  - цель 100к, шаг 1..5к, первое пополнение дня даёт очки.
  *
  * Штрафы растут вместе с EGO: множитель = (1 + 0.25 за круг) * (0.5 .. 1.5 по рангу).
  * Награды остаются прежними. Сложность заданий (код) растёт по кругам.
@@ -66,7 +66,7 @@
 
 /* задания: 14 ежедневных (ядро) + бонусы; пул = ядро + «дочь» + ротация */
 #define EGO_CORE_QUESTS 16
-#define EGO_DAUGHTER_QUEST 16 // «время с дочерью»: бонус-слот в дни с ней (каждые 3 дня)
+#define EGO_DAUGHTER_QUEST 16 // «время с близкими»: бонус-слот в особые дни (каждые 3 дня)
 #define EGO_BONUS_FIRST 17 // первый пункт ротации бонусов
 #define EGO_BONUS_POOL 35 // сколько пунктов в ротации
 #define EGO_POOL_COUNT (EGO_BONUS_FIRST + EGO_BONUS_POOL) // 38
@@ -78,7 +78,7 @@
 #define EGO_LOAD_NONE 0
 #define EGO_LOAD_REPS 1 // повторы (отжимания, приседания)
 #define EGO_LOAD_MINUTES 2 // минуты с фокус-таймером
-#define EGO_DAUGHTER_CYCLE 3 // дни с дочерью чередуются с женой: раз в 3 дня
+#define EGO_DAUGHTER_CYCLE 3 // особые дни повторяются раз в 3 дня
 
 /* минимум дня: 8 пунктов, биты в min_done */
 #define EGO_MIN_ITEMS 8
@@ -102,8 +102,8 @@
 #define EGO_SLEEP_HIST 7
 
 /* копилка */
-#define EGO_SAVINGS_START 70 // тысяч сейчас
-#define EGO_SAVINGS_GOAL 200 // цель, тысяч
+#define EGO_SAVINGS_START 0 // тысяч на старте
+#define EGO_SAVINGS_GOAL 100 // цель, тысяч
 #define EGO_SAVINGS_DAY_BONUS 5 // очки за первое пополнение дня
 #define EGO_SAVINGS_STEP_MAX 5
 
@@ -189,7 +189,7 @@ typedef struct {
     uint8_t load_prog[EGO_POOL_COUNT]; // выполненных дней с прошлого роста
     uint8_t load_miss[EGO_POOL_COUNT]; // подряд пропущенных дней
     uint16_t pillar_count[EGO_PILLARS]; // выполнений по направлениям за всё время
-    uint32_t daughter_anchor; // сутки, от которых раз в 3 дня идут дни с дочерью (0 = выключено)
+    uint32_t daughter_anchor; // сутки, от которых раз в 3 дня идут особые дни (0 = выключено)
 
     /* проверки: сколько раз «да» и сколько вылетов (включая без ответа) */
     uint16_t check_ok[EGO_CHECK_COUNT];
@@ -310,7 +310,7 @@ void ego_sleep_adjust(EgoState* s, int delta_min, uint32_t now);
 /* Копилка, тысяч. Возвращает выданные очки (первое пополнение за сутки). */
 int ego_savings_add(EgoState* s, int delta_k, uint32_t day);
 
-/* День с дочерью: включить / выключить сегодня (дальше раз в 3 дня). Возвращает, включено ли. */
+/* Особый день: включить / выключить сегодня (дальше раз в 3 дня). Возвращает, включено ли. */
 bool ego_daughter_toggle(EgoState* s, uint32_t day);
 bool ego_daughter_day(const EgoState* s, uint32_t day);
 
